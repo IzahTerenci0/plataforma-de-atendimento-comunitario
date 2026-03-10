@@ -1,3 +1,6 @@
+// O repository conversa diretamente com o banco de dados.
+
+
 const { resolve } = require('node:dns');
 const getDatabase = require('../config/database');
 const { get } = require('node:http');
