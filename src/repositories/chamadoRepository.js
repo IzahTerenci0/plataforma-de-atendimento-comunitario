@@ -159,6 +159,30 @@ class ChamadoRepository{
 
     }
 
+
+    async indicadores(){
+
+        const db = getDatabase();
+
+        const sql = `
+            SELECT status, COUNT(*) as total
+            FROM chamados
+            GROUP BY status
+        `;
+
+        return new Promise((resolve, reject) => {
+
+            db.all(sql, [], (err, rows) => {
+
+                if (err) reject(err);
+                else resolve(rows);
+                
+            });
+
+        });
+
+    }
+
 }
 
 

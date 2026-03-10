@@ -32,6 +32,7 @@ class ChamadoService{
         return novo;
     }
 
+
     async atualizarStatus(id, novoStatus){
 
         const chamado = await chamadoRepository.findById(id);
@@ -60,15 +61,24 @@ class ChamadoService{
         return { mensagem: 'Status atualizado com sucesso.' };
     }
 
+
     async listar(){
 
         return chamadoRepository.findAllWithCategoria();
 
     }
 
+
     async excluir(id){
 
         return chamadoRepository.delete(id);
+
+    }
+
+    
+    async indicadores(){
+
+        return chamadoRepository.indicadores();
 
     }
 

@@ -10,4 +10,12 @@ router.get('/', authMiddleware, (req, res) => chamadoController.listar(req, res)
 router.delete('/:id', authMiddleware, (req, res) => chamadoController.excluir(req, res));
 
 
+router.get('/indicadores', authMiddleware, async (req, res) => {
+
+    const dados = await chamadoService.indicadores();
+    res.json(dados);
+
+});
+
+
 module.exports = router;
