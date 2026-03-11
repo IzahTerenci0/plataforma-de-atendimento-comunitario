@@ -9,6 +9,7 @@ class usuarioController{
         // Tratamento de erros para não quebrar a API e o servidor parar
         try{
 
+            console.log("BODY RECEBIDO:", req.body); // Teste
             const resultado = await usuarioService.cadastrar(req.body);
             return res.status(201).json(resultado);
 

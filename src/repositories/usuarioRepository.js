@@ -12,7 +12,7 @@ class UsuarioRepository{
 
         const db = getDatabase();
 
-        const sql = `INSERT INTO usuarios (nome, email, senha) VALLUES (?, ?, ?)`;
+        const sql = `INSERT INTO usuarios (nome, email, senha_hash) VALUES (?, ?, ?)`;
 
         return new Promise((resolve, reject) => {
 

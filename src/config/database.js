@@ -3,13 +3,19 @@
 
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const fs = require('fs');
 
 let instancia = null;
+
 
 function getDatabase(){
 
     // A conexão somente será criada se ainda não existir
     if(!instancia){
+
+        const dbPath = path.resolve(__dirname, '../../database.db');
+        const sqlPath = path.resolve(__dirname, '../../database.sql');
+
 
         instancia = new sqlite3.Database(
 
@@ -24,6 +30,23 @@ function getDatabase(){
                 } else{
 
                     console.log('Banco de dados conectado com sucesso!');
+
+                    // Teste
+                    // Lendo o arquivo SQL
+                    const scriptSQL = fs.readFileSync(sqlPath, 'utf-8');
+
+                    // Log de teste
+                    console.log("Executando script SQL...");
+
+                    instancia.exec(scriptSQL, (erroExec) => {
+
+                    if(erroExec){
+                        console.error("ERRO NO SQL:", erroExec.message);
+                    } else{
+                        console.log("Estrutura do banco garantida com sucesso!");
+                    }
+
+                });
 
                 }
 

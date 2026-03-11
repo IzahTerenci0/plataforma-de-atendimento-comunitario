@@ -11,6 +11,7 @@ const SALT_ROUNDS = 10; // É o número de ciclos de processamento, quantas veze
 
 class usuarioService{
 
+    // Registro de usuário
     async cadastrar(dados){
 
         const { nome, email, senha } = dados;
@@ -24,7 +25,7 @@ class usuarioService{
 
         // Verifica se o e-mail não está duplicado no banco, evitando que existe mais de uma conta com o mesmo endereço de e-mail
         // Explicitando a regra de negócio na aplicação - Faz validação prévia para evitar erro no banco de dados
-        const usuarioExistente = await usuarioRepository.findByEmail(email);
+        const usuarioExistente = await usuarioRepository.buscaEmail(email);
 
         if (usuarioExistente) {
 
@@ -35,7 +36,7 @@ class usuarioService{
         // Cria hash da senha para garantir segurança e que ela não possa ser quebrada
         const senhaHash = await bcrypt.hash(senha, SALT_ROUNDS);
 
-        const novoUsuario = await usuarioRepository.create({ nome, email, senha: senhaHash });
+        const novoUsuario = await usuarioRepository.criaUsuario({ nome, email, senha: senhaHash });
 
         return { id: novoUsuario.id, nome, email };
 
@@ -52,7 +53,7 @@ class usuarioService{
 
         }
 
-        const usuario = await usuarioRepository.findByEmail(email);
+        const usuario = await usuarioRepository.buscaEmail(email);
 
         if(!usuario){
 
@@ -91,4 +92,4 @@ class usuarioService{
 }
 
 
-module.exports = new UsuarioService();
+module.exports = new usuarioService();

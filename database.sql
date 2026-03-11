@@ -11,13 +11,13 @@ CREATE TABLE IF NOT EXISTS usuarios(
 );
 
 -- Tabela de categorias dos chamados
-CREATE TABLE categorias(
+CREATE TABLE IF NOT EXISTS categorias(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL UNIQUE
 );
 
 -- Tabela de chamados
-CREATE TABLE chamados(
+CREATE TABLE IF NOT EXISTS chamados(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     usuario_id INTEGER NOT NULL,
     categoria_id INTEGER NOT NULL,
@@ -29,14 +29,14 @@ CREATE TABLE chamados(
     status TEXT NOT NULL DEFAULT 'EM ABERTO',
     data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME,
-    concluido_em DATETIME
+    concluido_em DATETIME,
 
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );
 
 -- Tabela de histórico de status dos chamados
-CREATE TABLE historico_status(
+CREATE TABLE IF NOT EXISTS historico_status(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     chamado_id INTEGER NOT NULL,
     status_anterior TEXT NOT NULL,
