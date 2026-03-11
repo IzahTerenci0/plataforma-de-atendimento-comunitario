@@ -47,4 +47,4 @@ CREATE TABLE IF NOT EXISTS historico_status(
 );
 
 -- Seed incial de categorias
-INSERT INTO categorias (nome) VALUES ('FALTA_DE_ENERGIA'), ('VAZAMENTO'), ('QUEDA_DE_ARVORE'), ('OUTROS');
+INSERT OR IGNORE INTO categorias (nome) VALUES ('FALTA_DE_ENERGIA'), ('VAZAMENTO'), ('QUEDA_DE_ARVORE'), ('OUTROS');

@@ -62,7 +62,7 @@ class usuarioService{
         }
 
         // Comparando a senha que o usuário inseriu com o hash salvo no banco de dados
-        const senhaValida = await bcrypt.compare(senha, usuario.senha);
+        const senhaValida = await bcrypt.compare(senha, usuario.senha_hash);
 
         if(!senhaValida){
 
