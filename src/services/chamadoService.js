@@ -1,3 +1,9 @@
+/*
+** Service aplica regras de negócio - Responsável por toda lógica relacionada a chamados
+** Cria chamados com status inciial correto, valida prioridades, aplica regras de transição de status
+*/
+
+
 const axios = require('axios');
 const chamadoRepository = require('../repositories/chamadoRepository');
 const ChamadoFactory = require('../factories/chamadoFactory');
@@ -8,6 +14,7 @@ class ChamadoService{
 
     async criar(dados, usuarioId){
 
+        //
         if(!dados.categoria_id || !dados.descricao || !dados.cep || !dados.prioridade){
 
             throw new Error('Campos obrigatórios não informados.');

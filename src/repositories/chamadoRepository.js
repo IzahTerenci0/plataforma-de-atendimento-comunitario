@@ -4,7 +4,7 @@ const getDatabase = require('../config/database');
 
 class ChamadoRepository{
 
-    // Responsável por inserir um chamado no banco de dados
+    // Responsável por gravar um chamado no banco de dados
     async criaChamado(chamado){
 
         const db = getDatabase();

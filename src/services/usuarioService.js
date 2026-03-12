@@ -1,6 +1,6 @@
-/* Service aplica regras de negócio.
+/* Service aplica regras de negócio - Responsável por toda lógica relacionada a usuários
 ** Realiza validação de dados, verifica se e-mail já existe, gera hash da senha, compara senha no login
-** e gera token JWT
+** e gera token JWT. Apenas retorna dados ou lança erro - não envia JSON
 */
 
 const bcrypt = require('bcrypt');

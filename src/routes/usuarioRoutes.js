@@ -11,7 +11,7 @@ router.post('/register', (req, res) => usuarioController.cadastrar(req, res));
 router.post('/login', (req, res) => usuarioController.login(req, res));
 
 
-// Rota protegida de teste
+// Rota protegida de teste - Modificar depois!!
 router.get('/teste-protegido', autenticaJWT, (req, res) => {
 
     res.json({

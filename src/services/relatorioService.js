@@ -1,4 +1,8 @@
-// Implementação do endpoint de relatório que atenda aos requisitos do enunciado
+/*
+** Service aplica regras de negócio - Responsável por toda lógica relacionada a relatórios
+** Transforma dados brutos em informação útil
+*/
+
 
 const getDatabase = require('../config/database');
 
