@@ -1,17 +1,24 @@
 /*
 ** Rotas de relatório
-** Definindo quais URLs existem e para onde cada uma aponta
+** Definindo quais URLs existem e para onde cada uma aponta, somente mapeia URLs para o controller
 */
 
 
 const express = require('express');
 const router = express.Router();
 const relatorioService = require('../services/relatorioService');
+const relatorioController =  require('../controllers/relatorioController');
 const authMiddleware = require('../middlewares/authMiddleware');
+
+
+// Todas as rotas abaixo exigem autenticação. Este trecho tira a necessidade de redundância de authMiddleware em cada rota descrita
+router.use(authMiddleware);
 
 // Rota genérica
 // Rota de filtros e listagem de chamados
-// Ambas rotas usam authMiddleware, então necessário enviar o token no header
+router.get('/', relatorioController.gerarRelatorio);
+
+/*
 router.get('/', authMiddleware, async (req, res) => {
 
     try{
@@ -43,10 +50,14 @@ router.get('/', authMiddleware, async (req, res) => {
 
     }
 
-});
+});*/
 
 
 // Rota de indicadores
+// Retorna apenas indicadores consolidados
+router.get('/indicadores', relatorioController.indicadores);
+
+/*
 router.get('/indicadores', authMiddleware, async (req, res) => {
 
     try{
@@ -67,7 +78,7 @@ router.get('/indicadores', authMiddleware, async (req, res) => {
 
     }
 
-});
+});*/
 
 
 

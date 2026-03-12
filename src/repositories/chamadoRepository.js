@@ -183,6 +183,154 @@ class ChamadoRepository{
 
     }
 
+
+    // Realiza busca complexa com utilização de filtros dinâmicos
+    async buscaFiltro(filtros){
+
+        const db = getDatabase();
+
+        let sql = `SELECT ch.id, ch.descricao, ch.status, ch.prioridade, ch.data_criacao, ch.concluido_em, c.nome AS categoria
+                   FROM chamados ch
+                   JOIN categorias c ON ch.categoria_id = c.id
+                   WHERE 1=1`; // Garante uma condição sempre verdadeira 
+
+        const params = [];
+
+        if(filtros.status){
+
+            sql = sql + ' AND ch.status = ?';
+            params.push(filtros.status);
+
+        }
+
+        if(filtros.categoria_id){
+
+            sql = sql + ' AND ch.categoria_id = ?';
+            params.push(filtros.categoria_id);
+
+        }
+
+        if(filtros.data_inicio){
+
+            sql = sql + ' AND ch.data_inicio = ?';
+            params.push(filtros.data_inicio);
+
+        }
+
+        if(filtros.data_fim){
+
+            sql = sql + ' AND ch.data_fim = ?';
+            params.push(filtros.data_fim);
+
+        }
+
+        return new Promise((resolve, reject) => {
+
+            db.all(sql, params, (err, rows) => {
+
+                if(err){
+
+                    reject(err);
+
+                } else{
+
+                    resolve(rows);
+
+                }
+
+            })
+
+        })
+
+    }
+
+
+    // Processamento do tempo médio de conclusão em minutos
+    async calcularTempoMedio(){
+
+        const db = getDatabase();
+
+        const sql = `
+            SELECT 
+                AVG(
+                    (strftime('%s', concluido_em) - strftime('%s', data_criacao)) / 60.0
+                ) AS tempo_medio
+            FROM chamados WHERE status = 'CONCLUIDO' AND concluido_em IS NOT NULL
+        `;
+
+        return new Promise((resolve, reject) => {
+
+            db.get(sql, [], (err, row) => {
+
+                if(err){
+
+                    reject(err);
+ 
+                } else{
+
+                    if(row && row.tempo_medio){
+
+                        resolve(row.tempo_medio);
+
+                    } else{
+
+                        resolve(0);
+
+                    }
+
+                }
+
+            });
+
+        });
+
+    }
+
+
+    // Processamento da categoria mais recorrente
+    async buscarCategoriaRecorrente(){
+
+        const db = getDatabase();
+
+        const sql = `
+            SELECT 
+                c.nome AS categoria,
+                COUNT(*) AS total
+            FROM chamados ch
+            JOIN categorias c ON ch.categoria_id = c.id
+            GROUP BY ch.categoria_id
+            ORDER BY total DESC
+            LIMIT 1
+        `;
+
+        return new Promise((resolve, reject) => {
+
+            db.get(sql, [], (err, row) => {
+
+                if(err){
+
+                    reject(err);
+
+                } else{
+
+                    if(row){
+
+                        resolve(row);
+
+                    } else{
+
+                        resolve(null);
+
+                    }
+
+                }
+
+            });
+
+        });
+
+    }
+
 }
 
 

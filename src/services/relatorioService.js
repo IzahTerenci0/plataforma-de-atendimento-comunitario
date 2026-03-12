@@ -5,11 +5,13 @@
 
 
 const getDatabase = require('../config/database');
+const chamadoRepository = require('../repositories/chamadoRepository');
 
 
 class RelatorioService {
 
-    async gerar(filtros = {}){
+    // Gera listagem de chamados com filtros
+    async gerar(filtros){
 
         const db = getDatabase();
 
@@ -46,36 +48,9 @@ class RelatorioService {
 
         }
 
+        const chamados = await chamadoRepository.buscaFiltro(filtros);
 
-        const whereSQL = where.length ? 'WHERE ' + where.join(' AND ') : '';
-
-        // Consulta principal
-        // julianday -> converter para permitir calcular a diferença em dias
-        const sql = `
-            SELECT 
-                c.id,
-                c.descricao,
-                cat.nome AS categoria,
-                c.status,
-                c.data_criacao,
-                c.concluido_em,
-                (julianday(c.concluido_em) - julianday(c.data_criacao)) * 24*60 AS duracao_minutos
-            FROM chamados c
-            JOIN categorias cat ON c.categoria_id = cat.id
-            ${whereSQL}
-        `;
-
-        return new Promise((resolve, reject) => {
-
-            // Execução da query SQL, para retornar todas as linhas compatíveis
-            db.all(sql, params, (err, rows) => {
-
-                if (err) reject(err);
-                else resolve(rows);
-
-            });
-
-        });
+        return chamados;
 
     }
 
@@ -83,43 +58,9 @@ class RelatorioService {
     // Consulta informações dos chamados, calcula uma média de tempo de conclusão dos chamados e retorna isso ao usuário
     async tempoMedioConclusao(){
 
-        const db = getDatabase();
+        const resultado = await chamadoRepository.calcularTempoMedio();
 
-        const sql = `
-            SELECT AVG((julianday(concluido_em) - julianday(data_criacao)) * 24*60) AS media_minutos
-            FROM chamados
-            WHERE status = 'CONCLUIDO'
-        `;
-
-        return new Promise((resolve, reject) => {
-
-            // Execução da query SQL, esperando retornar somente uma linha
-            db.get(sql, [], (err, row) => {
-
-                if(err){
-
-                    reject(err);
-
-                } else{
-
-                    // Refinamento: Fazer o arredondamento do valor de média para 0 casas decimais
-                    // O intuito é ficar mais palatável o retorno para apresentação - Poderia ser feito por quem irá consumir essa API
-                    let mediaMinutosArr = null;
-
-                    if(row.media_minutos !== null && row.media_minutos !== undefined){
-
-                        mediaMinutosArr = Math.round(row.media_minutos);
-
-                    }
-
-                    // Resolve a Promise com o valor
-                    resolve(mediaMinutosArr);
-
-                }
-
-            });
-
-        });
+        return resultado || 0;
 
     }
 
@@ -127,28 +68,42 @@ class RelatorioService {
     // Estatística da categoria que teve maior quantidade de chamados registrados até o momento
     async categoriaMaisRecorrente(){
 
-        const db = getDatabase();
+        const resultado = await chamadoRepository.buscarCategoriaRecorrente();
 
-        const sql = `
-            SELECT cat.nome, COUNT(*) AS total
-            FROM chamados c
-            JOIN categorias cat ON c.categoria_id = cat.id
-            GROUP BY c.categoria_id
-            ORDER BY total DESC
-            LIMIT 1
-        `;
+        return resultado || 0;
 
-        return new Promise((resolve, reject) => {
+    }
 
-            // Execução da query SQL, esperando retornar somente uma linha
-            db.get(sql, [], (err, row) => {
 
-                if (err) reject(err);
-                else resolve(row);
+    // Agrupamento de indicadores em um único objeto
+    async obterIndicadores(){
 
-            });
+        const media = await this.tempoMedioConclusao();
+        const categoria = await this.categoriaMaisRecorrente();
 
-        });
+        return{
+
+            tempo_medio_conclusao_minutos: media,
+            categoria_mais_recente: categoria
+
+        };
+
+    }
+
+
+    // Gera relatório completo (listagem e indicadores juntos)
+    async gerarRelCompleto(filtros){
+
+        const chamados = await this.gerar(filtros);
+        const indicadores = await this.obterIndicadores();
+
+        return{
+
+            chamados: chamados,
+            tempo_medio_conclusao_minutos: indicadores.tempo_medio_conclusao_minutos,
+            categoria_mais_recente: indicadores.categoria_mais_recente
+
+        };
 
     }
     
