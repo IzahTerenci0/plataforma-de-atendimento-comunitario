@@ -1,3 +1,9 @@
+/*
+** Rotas de chamados
+** Definindo quais URLs existem e para onde cada uma aponta
+*/
+
+
 const express = require('express');
 const router = express.Router();
 

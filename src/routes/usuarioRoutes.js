@@ -1,6 +1,13 @@
+/*
+** Rotas de usuário
+** Definindo quais URLs existem e para onde cada uma aponta
+*/
+
+
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
+
 
 // Temporário - TESTE
 const autenticaJWT = require('../middlewares/authMiddleware');
@@ -11,7 +18,7 @@ router.post('/register', (req, res) => usuarioController.cadastrar(req, res));
 router.post('/login', (req, res) => usuarioController.login(req, res));
 
 
-// Rota protegida de teste - Modificar depois!!
+// Rota protegida para fins de teste - Modificar depois!!
 router.get('/teste-protegido', autenticaJWT, (req, res) => {
 
     res.json({

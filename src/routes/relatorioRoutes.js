@@ -1,3 +1,9 @@
+/*
+** Rotas de relatório
+** Definindo quais URLs existem e para onde cada uma aponta
+*/
+
+
 const express = require('express');
 const router = express.Router();
 const relatorioService = require('../services/relatorioService');
