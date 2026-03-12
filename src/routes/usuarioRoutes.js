@@ -14,11 +14,11 @@ const autenticaJWT = require('../middlewares/authMiddleware');
 
 
 // Definição dos endpoints, as rotas que deveram ser registradas no servidor, para acesso
-router.post('/register', (req, res) => usuarioController.cadastrar(req, res));
-router.post('/login', (req, res) => usuarioController.login(req, res));
+router.post('/register', usuarioController.cadastrar);
+router.post('/login', usuarioController.login);
 
-
-// Rota protegida para fins de teste - Modificar depois!!
+// Rota protegida para fins de teste
+/*
 router.get('/teste-protegido', autenticaJWT, (req, res) => {
 
     res.json({
@@ -29,6 +29,7 @@ router.get('/teste-protegido', autenticaJWT, (req, res) => {
     });
 
 });
+*/
 
 
 module.exports = router;
