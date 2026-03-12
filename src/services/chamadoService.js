@@ -27,15 +27,16 @@ class ChamadoService{
 
         });
 
-        const novo = await chamadoRepository.create(chamado);
+        const novo = await chamadoRepository.criaChamado(chamado);
 
         return novo;
+
     }
 
 
     async atualizarStatus(id, novoStatus){
 
-        const chamado = await chamadoRepository.findById(id);
+        const chamado = await chamadoRepository.buscaID(id);
 
         if(!chamado){
 
@@ -54,7 +55,7 @@ class ChamadoService{
 
         ){ throw new Error('Fluxo de status inválido.'); }
 
-        await chamadoRepository.updateStatus(id, novoStatus);
+        await chamadoRepository.atualizarStatus(id, novoStatus);
 
         await StatusObserver.registrar(id, statusAtual, novoStatus);
 
@@ -64,7 +65,7 @@ class ChamadoService{
 
     async listar(){
 
-        return chamadoRepository.findAllWithCategoria();
+        return chamadoRepository.buscarCategoria();
 
     }
 

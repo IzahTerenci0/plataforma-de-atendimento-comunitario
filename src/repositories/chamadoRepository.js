@@ -75,7 +75,7 @@ class ChamadoRepository{
     }
 
 
-    async autualizaStatus(id, novoStatus){
+    async atualizarStatus(id, novoStatus){
 
         const db = getDatabase();
 
@@ -84,7 +84,7 @@ class ChamadoRepository{
         const sql = `
             UPDATE chamados
             SET status = ?, 
-                updated_at = CURRENT_TIMESTAMP,
+                atualizado_em = CURRENT_TIMESTAMP,
                 concluido_em = CASE 
                     WHEN ? = 'CONCLUÍDO' THEN CURRENT_TIMESTAMP 
                     ELSE concluido_em 

@@ -29,5 +29,6 @@ async function iniciaSeed(){
 
 }
 
+
 // Exportando o módulo
 module.exports = iniciaSeed;
